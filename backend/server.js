@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
+const cors = require('cors');
 const db = new sqlite3.Database('mydatabase.db');
 
 const app = express();
+
 const PORT = 8080;
 
 app.use(bodyParser.json());
+app.use(cors());
 
 app.listen(PORT, (error) =>{
     if(!error)
@@ -214,7 +217,7 @@ app.post('/deleteUpdateReward', (req, res) => {
     // Start a transaction to ensure atomic operations
     db.serialize(() => {
       // First, fetch the reward value from rewardsHistory
-      db.get('SELECT Reward FROM rewardsHistory WHERE id = ?', [id], (err, row) => {
+      db.get('SELECT reward FROM rewardsHistory WHERE id = ?', [id], (err, row) => {
         if (err) {
           return res.status(500).json({ error: err.message });
         }
@@ -223,7 +226,7 @@ app.post('/deleteUpdateReward', (req, res) => {
           return res.status(404).json({ message: 'Reward record not found' });
         }
         
-        const rewardValue = row.Reward;
+        const rewardValue = row.reward;
   
         // Update the PF and Reward fields in the users table
         db.run('BEGIN TRANSACTION');
@@ -234,7 +237,7 @@ app.post('/deleteUpdateReward', (req, res) => {
             return res.status(500).json({ error: err.message });
           }
           
-          db.run('UPDATE users SET Reward = Reward - ? WHERE id = ?', [rewardValue, receiverid], function(err) {
+          db.run('UPDATE users SET reward = reward - ? WHERE id = ?', [rewardValue, receiverid], function(err) {
             if (err) {
               db.run('ROLLBACK');
               return res.status(500).json({ error: err.message });
