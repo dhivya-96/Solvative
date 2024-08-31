@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import "./styles/NewUser.css";
+import "./styles/UserInfo.css";
 
 const UserInfo = ({ type }) => {
   const [name, setName] = useState("");
   const { id } = useParams();
   const [userData, setUserData] = useState({});
+  const [isValid, setIsValid] = useState(true);
+  
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
-
   const checkUser = async () => {
     try {
       // Check if user exists
@@ -26,6 +28,22 @@ const UserInfo = ({ type }) => {
       checkUser();
     }
   }, []);
+
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setName(value);
+
+    if (value.trim() === '') {
+        setError('Username is required.');
+        setIsValid(false);
+    } else if (value.length < 3) {
+        setError('Username atleast 3 characters.');
+        setIsValid(false);
+    } else {
+        setError('');
+        setIsValid(true);
+    }
+};
 
   const handleSave = async () => {
     try {
@@ -72,9 +90,10 @@ const UserInfo = ({ type }) => {
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) =>handleNameChange(e)}
             required
           />
+          {error && <p className="error">{error}</p>}
         </div>
 
         <div className="form-buttons">

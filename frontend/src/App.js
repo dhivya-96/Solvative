@@ -4,6 +4,7 @@ import AppBar from './components/AppBar';
 import Listusers from './components/ListUsers';
 import UserInfo from './components/UserInfo';
 import HistoryInfo from './components/HistoryInfo';
+import NewReward from './components/NewReward';
 import './App.css';
 
 const App = () => {
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/new" element={<UserInfo type="new" />} />
           <Route path="/user/:id/p5" element={<HistoryInfo type='p5' />} />
           <Route path="/user/:id/rewards" element={<HistoryInfo type='reward'/>} />
+          <Route path="/user/:id/rewards/new" element={<NewReward/>} />
         </Routes>
       </div>
     </Router>

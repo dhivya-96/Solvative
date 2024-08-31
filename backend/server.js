@@ -77,7 +77,9 @@ app.get("/P5History", (req, res) => {
       rewardsHistory.timestamp,
       rewardsHistory.reward,
       sender.name AS senderName,
-      receiver.name AS receiverName
+      receiver.name AS receiverName,
+      sender.id AS senderid,
+      receiver.id AS receiverid
     FROM rewardsHistory
     LEFT JOIN users AS sender ON rewardsHistory.senderid = sender.id
     LEFT JOIN users AS receiver ON rewardsHistory.receiverid = receiver.id
@@ -109,7 +111,9 @@ app.get("/rewardsHistory", (req, res) => {
       rewardsHistory.timestamp,
       rewardsHistory.reward,
       sender.name AS senderName,
-      receiver.name AS receiverName
+      receiver.name AS receiverName,
+      sender.id AS senderid,
+      receiver.id AS receiverid
     FROM rewardsHistory
     LEFT JOIN users AS sender ON rewardsHistory.senderid = sender.id
     LEFT JOIN users AS receiver ON rewardsHistory.receiverid = receiver.id

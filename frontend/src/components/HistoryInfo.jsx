@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import "./styles/HistoryInfo.css";
+import { useNavigate } from "react-router-dom";
 
 const HistoryInfo = ({ type }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -28,15 +31,28 @@ const HistoryInfo = ({ type }) => {
     };
 
     fetchHistory();
-  }, []);
+  }, [refresh]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (value) => {
     try {
-      await axios.delete(`/api/p5-history/${id}`);
-      setHistory(history.filter((entry) => entry.id !== id));
+      await axios.post(`http://localhost:8080/deleteRewardAndUpdateUsers`, {
+        id: value?.id,
+        senderid: value?.senderid,
+        receiverid: value?.receiverid,
+      });
+      alert("Reward record deleted successfully");
+      setRefresh(true);
     } catch (err) {
       setError(err.message || "An error occurred while deleting");
     }
+  };
+
+  const handleClickNewReward = () => {
+    navigate(`/user/${id}/rewards/new`);
+  };
+
+  const handleBack = () => {
+    navigate(`/user/${id}`);
   };
 
   if (loading) return <p>Loading...</p>;
@@ -44,6 +60,16 @@ const HistoryInfo = ({ type }) => {
 
   return (
     <div className="container">
+      <div className="history-actions">
+        {type == "p5" && (
+          <button className="new-user-button" onClick={handleClickNewReward}>
+            New Reward
+          </button>
+        )}
+        <button className="back-button" onClick={handleBack}>
+          Back
+        </button>
+      </div>
       <table className="table">
         <thead>
           <tr>
@@ -66,7 +92,7 @@ const HistoryInfo = ({ type }) => {
                   <td className="cell">
                     <button
                       className="button"
-                      onClick={() => handleDelete(entry.id)}
+                      onClick={() => handleDelete(entry)}
                     >
                       Delete
                     </button>

@@ -8,6 +8,15 @@ const AppBar = () => {
 
   // Determine the title based on the current route
   const getTitle = () => {
+    if (path.endsWith("/rewards/new")) {
+      return "New Reward";
+    }
+    if (path.endsWith("/rewards")) {
+      return "Rewards History";
+    }
+    if (path.endsWith("/p5")) {
+      return "P5 Points History";
+    }
     if (path.startsWith("/user/")) {
       return "User Details";
     }
