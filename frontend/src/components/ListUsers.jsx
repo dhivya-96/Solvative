@@ -54,15 +54,17 @@ const ListUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map(item => (
+          {data.length>0?(data.map(item => (
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.name}</td>
-              <td>{item.PF}</td>
+              <td>{item.PF?item.PF:0}</td>
               <td>{item.reward?item.reward:0}</td>
               <td> <Link to={`/user/${item.id}`}><FaUserEdit/></Link></td>
             </tr>
-          ))}
+          ))):<tr >
+          <td colSpan={5} className='align-center'>No records found</td>
+      </tr>}
         </tbody>
       </table>
     </div>

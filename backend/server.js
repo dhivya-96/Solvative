@@ -31,7 +31,27 @@ app.get('/', (req, res) => {
     });
   });
 
-  app.get('/rewardsHistory', (req, res) => {
+  // Route to get a user by ID
+app.get('/getuser/:id', (req, res) => {
+  const userId = req.params.id;
+
+  // Query to find a single user
+  const query = 'SELECT * FROM users WHERE id = ?';
+
+  db.get(query, [userId], (err, row) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    if (row) {
+      res.json(row); // Send user data as JSON response
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
+  });
+});
+
+  app.get('/rewardsHistoryAll', (req, res) => {
     // Query the database for all records in the 'rewardsHistory' table
     db.all('SELECT * FROM rewardsHistory', [], (err, rows) => {
       if (err) {
@@ -41,6 +61,70 @@ app.get('/', (req, res) => {
       res.json(rows);
     });
   });
+
+  app.get('/P5History', (req, res) => {
+   
+    const { senderid } = req.query;
+
+    // Validate senderId
+    if (!senderid) {
+        return res.status(400).json({ error: 'senderId is required' });
+    }
+
+    // Query the database for records with the specified senderId
+    const query = `
+        SELECT 
+            rewardsHistory.id,
+            rewardsHistory.timestamp,
+            rewardsHistory.reward,
+            sender.name AS senderName,
+            receiver.name AS receiverName
+        FROM rewardsHistory
+        LEFT JOIN users AS sender ON rewardsHistory.senderid = sender.id
+        LEFT JOIN users AS receiver ON rewardsHistory.receiverid = receiver.id
+        WHERE rewardsHistory.senderid = ?
+    `;
+
+    db.all(query, [senderid], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+app.get('/rewardsHistory', (req, res) => {
+   
+  const { receiverid } = req.query;
+
+  // Validate senderId
+  if (!receiverid) {
+      return res.status(400).json({ error: 'receiverid is required' });
+  }
+
+  // Query the database for records with the specified senderId
+  const query = `
+      SELECT 
+          rewardsHistory.id,
+          rewardsHistory.timestamp,
+          rewardsHistory.reward,
+          sender.name AS senderName,
+          receiver.name AS receiverName
+      FROM rewardsHistory
+      LEFT JOIN users AS sender ON rewardsHistory.senderid = sender.id
+      LEFT JOIN users AS receiver ON rewardsHistory.receiverid = receiver.id
+      WHERE rewardsHistory.receiverid = ?
+  `;
+
+  db.all(query, [receiverid], (err, rows) => {
+      if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+      }
+      res.json(rows);
+  });
+});
 
 
 app.post('/newuser', (req, res) => {
