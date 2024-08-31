@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import axios, { all } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import "./styles/UserInfo.css";
@@ -9,8 +9,20 @@ const UserInfo = ({ type }) => {
   const { id } = useParams();
   const [userData, setUserData] = useState({});
   const [isValid, setIsValid] = useState(true);
+  const [allUsers,setAllUsers] = useState([]);
   
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/")
+      .then((response) => {
+        setAllUsers(response?.data.map((val)=>{return val.name}));
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
 
   const navigate = useNavigate();
   const checkUser = async () => {
@@ -32,40 +44,48 @@ const UserInfo = ({ type }) => {
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
-
     if (value.trim() === '') {
         setError('Username is required.');
         setIsValid(false);
     } else if (value.length < 3) {
         setError('Username atleast 3 characters.');
         setIsValid(false);
-    } else {
-        setError('');
-        setIsValid(true);
+    }else if (allUsers.includes(value)) {
+      setError('Username already exists.');
+      setIsValid(false);
+    }else {
+      setError('');
+      setIsValid(true);
     }
-};
+  };
 
   const handleSave = async () => {
-    try {
-      const userType = type == "exists" ? "edituser" : "newuser";
-      const reqBody =
-        type == "exists"
-          ? { name, id: parseInt(id) }
-          : {
-              name,
-              PF: 100,
-              reward: 0,
-            };
+    if(name=='' || name.trim()=='' || isValid == false){
+      setError('Username is invalid.');
+      setIsValid(false);
+    }
+    else{
+      try {
+        const userType = type == "exists" ? "edituser" : "newuser";
+        const reqBody =
+          type == "exists"
+            ? { name, id: parseInt(id) }
+            : {
+                name,
+                PF: 100,
+                reward: 0,
+              };
 
-      const response = await axios.post(
-        `http://localhost:8080/${userType}`,
-        reqBody
-      );
+        const response = await axios.post(
+          `http://localhost:8080/${userType}`,
+          reqBody
+        );
 
-      console.log("User created:", response.data);
-      navigate("/");
-    } catch (error) {
-      console.error("Error creating user:", error);
+        console.log("User created:", response.data);
+        navigate("/");
+      } catch (error) {
+        console.error("Error creating user:", error);
+      }
     }
   };
 
