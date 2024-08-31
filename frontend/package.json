@@ -1,6 +1,6 @@
 {
-  "name": "dhivya-frontend-solvative",
-  "version": "0.1.0",
+  "name": "solvative-frontend",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -38,11 +38,11 @@
       "last 1 safari version"
     ]
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "Frontend application for the Solvative App",
   "main": "index.js",
   "devDependencies": {
     "ajv": "^7.2.4"
   },
-  "author": "",
+  "author": "Dhivya Srinivasan",
   "license": "ISC"
 }

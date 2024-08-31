@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './styles/ListUsers.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./styles/ListUsers.css";
 import { FaUserEdit } from "react-icons/fa";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 
 const ListUsers = () => {
   const [data, setData] = useState([]);
@@ -11,17 +11,17 @@ const ListUsers = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/new');
+    navigate("/new");
   };
 
   useEffect(() => {
-    // Fetch data from the backend API
-    axios.get('http://localhost:8080/')
-      .then(response => {
-        setData(response.data); 
+    axios
+      .get("http://localhost:8080/")
+      .then((response) => {
+        setData(response.data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
@@ -40,9 +40,9 @@ const ListUsers = () => {
   // Render table with data
   return (
     <div className="App">
-    <button className="new-user-button" onClick={handleClick}>
-      New User
-    </button>
+      <button className="new-user-button" onClick={handleClick}>
+        New User
+      </button>
       <table>
         <thead>
           <tr>
@@ -54,17 +54,28 @@ const ListUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {data.length>0?(data.map(item => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
-              <td>{item.PF?item.PF:0}</td>
-              <td>{item.reward?item.reward:0}</td>
-              <td> <Link to={`/user/${item.id}`}><FaUserEdit/></Link></td>
+          {data.length > 0 ? (
+            data.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>{item.PF ? item.PF : 0}</td>
+                <td>{item.reward ? item.reward : 0}</td>
+                <td>
+                  {" "}
+                  <Link to={`/user/${item.id}`}>
+                    <FaUserEdit />
+                  </Link>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5} className="align-center">
+                No records found
+              </td>
             </tr>
-          ))):<tr >
-          <td colSpan={5} className='align-center'>No records found</td>
-      </tr>}
+          )}
         </tbody>
       </table>
     </div>

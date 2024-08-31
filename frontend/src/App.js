@@ -3,16 +3,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AppBar from './components/AppBar';
 import Listusers from './components/ListUsers';
 import UserInfo from './components/UserInfo';
-import HistoryInfo from './components/HistoryInfo'
-
-// import About from './pages/About';
-// import Contact from './pages/Contact';
+import HistoryInfo from './components/HistoryInfo';
+import './App.css';
 
 const App = () => {
   return (
     <Router>
       <AppBar />
-      <div style={{ padding: '20px' }}>
+      <div className='box-align'>
         <Routes>
           <Route path="/" element={<Listusers />} />
           <Route path="/user/:id" element={<UserInfo type="exists" />}></Route>
