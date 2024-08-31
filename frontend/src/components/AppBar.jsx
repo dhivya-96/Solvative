@@ -21,11 +21,7 @@ const path = location.pathname;
         return 'List all users';
     case '/new':
         return 'Create User';
-    //   case '/about':
-    //     return 'About Us';
-    //   case '/contact':
-    //     return 'Contact Us';
-      default:
+    default:
         return 'My App';
     }
   };

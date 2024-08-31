@@ -15,9 +15,6 @@ const App = () => {
       <div style={{ padding: '20px' }}>
         <Routes>
           <Route path="/" element={<Listusers />} />
-          {/* <Route path="/user/:userId" element={<UserDetails />} /> */}
-          {/* <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} /> */}
           <Route path="/user/:id" element={<UserInfo type="exists" />}></Route>
           <Route path="/new" element={<UserInfo type="new" />} />
           <Route path="/user/:id/p5" element={<HistoryInfo type='p5' />} />
